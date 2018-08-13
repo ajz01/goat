@@ -8,4 +8,6 @@ By default package comments are added to each file of that package. This is usef
 
 Multi-line comments are allowed and slashes will automatically be added to each line of text. Use q on a line alone to quit entering a comment. 
 
+Goat will automatically split lines that are greater than 50 characters and place these on seperate comment lines.
+
 More features to be added.
