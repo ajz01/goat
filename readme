@@ -4,10 +4,19 @@ A command line tool for iteractively adding comments to existing go code.
 
 The default behaviour is to search the working directory for declarations that do not already have comments and prompt for text. 
 
-Package comments are added to each file of that package. This is useful for preamble style comments such as copyrights.
+Package comments are copied to each file of that package. This is useful for preamble style comments such as copyrights.
 
 Multi-line comments are allowed and slashes will automatically be added to each line of text. Use q on a line alone to quit entering a comment. 
 
 Goat will automatically split lines that are greater than 50 characters and place these on seperate comment lines.
 
 More features to be added.
+
+TODO
+
+add flags
+
+-e: Exported declarations only
+-a: Include all declarations
+
+Add prompt to allow stand alone package comments or shared package comments.

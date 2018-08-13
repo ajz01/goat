@@ -1,5 +1,5 @@
 // A package for reading go files and finding declarations
-// without comments.
+// that do not have comments.
 package read
 
 import (
@@ -32,7 +32,9 @@ func ReadDecl(file string) ([]Decl, error) {
 		return nil, err
 	}
 	d := []Decl{}
-	d = append(d, Decl{"package", int(node.Pos()), file, node.Name.Name, node.Name.Name, int(node.Pos()), "", []string{}})
+	if node.Package == 1 {
+		d = append(d, Decl{"package", int(node.Pos()), file, node.Name.Name, node.Name.Name, int(node.Pos()), "", []string{}})
+	}
 	ast.Inspect(node, func(n ast.Node) bool {
 		switch v := n.(type) {
 		case *ast.FuncDecl:
