@@ -1,11 +1,8 @@
-// This is the main package
-// for the goat tool.
-//
-// Goat allows users to add new comments to exisiting code by finding all declarations that do not already have comments and interactively collecting comments to be added to the declarations.
-//
-// New comments can be entered as multi-line text and will automatically have slashes added.
-//
-// Package comments can be shared across multiple files making it easier to add preamble style comments such as copyright notices.
+// The main package for goat. Goat (Go Add Text) is a
+// command line tool for adding comments to existing code.
+// By default goat will search the working directory for
+// declarations that are missing comments and prompt for
+// text.
 package main
 
 import (
@@ -20,7 +17,24 @@ import (
 	"go/token"
 	"os"
 	"sync"
+	"unicode"
 )
+
+// Split lines that are greater than 50 characters
+func splitLine(line string) []string {
+	lines := []string{}
+	a := []rune(line)
+	nl := ""
+	for _, r := range a {
+		nl += string(r)
+		if unicode.IsSpace(r) && len(nl) > 50 {
+			lines = append(lines, nl)
+			nl = ""
+		}
+	}
+	lines = append(lines, nl)
+	return lines
+}
 
 // Entry point for goat tool
 func main() {
@@ -49,7 +63,6 @@ DeclLoop:
 		if d.Dtype == "package" {
 			for _, decl := range ld {
 				if decl.PackageName == d.PackageName {
-					fmt.Printf("using existing comment filename: %s %s\n", d.FileName, decl.Comment)
 					d.Comment = decl.Comment
 					ld = append(ld, d)
 					continue DeclLoop
@@ -62,7 +75,15 @@ DeclLoop:
 			if scanner.Text() == "q" {
 				break
 			}
-			d.Comment = append(d.Comment, scanner.Text())
+			line := scanner.Text()
+			if len(line) > 50 {
+				lines := splitLine(line)
+				for _, l := range lines {
+					d.Comment = append(d.Comment, l)
+				}
+			} else {
+				d.Comment = append(d.Comment, line)
+			}
 		}
 		ld = append(ld, d)
 	}

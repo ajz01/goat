@@ -1,5 +1,5 @@
-// Read an existing go file and extract declarations that are missing comments
-// pass declaration info back through channel
+// A package for reading go files and finding declarations
+// without comments.
 package read
 
 import (

@@ -1,5 +1,6 @@
-// Package to walk directories concurrently. Inspired heavily by "The Go Programming Language" book by Donovan and Kerninghan. Great book for learning
-// Go programming.
+// A package for walking directories concurrently. Inspired
+// heavily by "The Go Programming Language" book by Donovan
+// and Kerninghan. Great book for learning Go programming.
 package walk
 
 import (
