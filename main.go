@@ -1,3 +1,11 @@
+// This is the main package
+// for the goat tool.
+//
+// Goat allows users to add new comments to exisiting code by finding all declarations that do not already have comments and interactively collecting comments to be added to the declarations.
+//
+// New comments can be entered as multi-line text and will automatically have slashes added.
+//
+// Package comments can be shared across multiple files making it easier to add preamble style comments such as copyright notices.
 package main
 
 import (
@@ -14,6 +22,7 @@ import (
 	"sync"
 )
 
+// Entry point for goat tool
 func main() {
 	flag.Parse()
 	roots := flag.Args()
@@ -35,7 +44,7 @@ func main() {
 
 	ld := []read.Decl{}
 	scanner := bufio.NewScanner(os.Stdin)
-	DeclLoop:
+DeclLoop:
 	for d := range dch {
 		if d.Dtype == "package" {
 			for _, decl := range ld {
@@ -59,10 +68,10 @@ func main() {
 	}
 
 	type fileAst struct {
-		file     *ast.File
-		fileSet  *token.FileSet
-		decls    []read.Decl
-		comments []*ast.Comment
+		file		*ast.File
+		fileSet		*token.FileSet
+		decls		[]read.Decl
+		comments	[]*ast.Comment
 	}
 
 	m := make(map[string]*fileAst)
@@ -89,7 +98,7 @@ func main() {
 				for _, c := range d.Comment {
 					comments = append(comments, &ast.CommentGroup{[]*ast.Comment{&ast.Comment{token.Pos(1), `// ` + c}}})
 				}
-				// move package token down a line
+
 				f.file.Package++
 			}
 		}
@@ -122,7 +131,7 @@ func main() {
 	}
 
 	for f, a := range m {
-		file, err := os.Create(f + "new")
+		file, err := os.Create(f)
 		if err != nil {
 			fmt.Printf("create file: %s\n", err)
 		}

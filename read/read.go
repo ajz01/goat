@@ -1,3 +1,5 @@
+// Read an existing go file and extract declarations that are missing comments
+// pass declaration info back through channel
 package read
 
 import (
@@ -11,17 +13,18 @@ import (
 )
 
 type Decl struct {
-	Dtype string
-	Pos int
-	FileName string
-	PackageName string
-	Name string
-	Line int
-	Body string
-	Comment []string
+	Dtype		string
+	Pos		int
+	FileName	string
+	PackageName	string
+	Name		string
+	Line		int
+	Body		string
+	Comment		[]string
 }
 
-
+// Read existing go files and extract declarations that are missing comments
+// pass declaration info back through channel
 func ReadDecl(file string) ([]Decl, error) {
 	fset := token.NewFileSet()
 	node, err := parser.ParseFile(fset, file, nil, parser.ParseComments)
@@ -31,7 +34,7 @@ func ReadDecl(file string) ([]Decl, error) {
 	d := []Decl{}
 	d = append(d, Decl{"package", int(node.Pos()), file, node.Name.Name, node.Name.Name, int(node.Pos()), "", []string{}})
 	ast.Inspect(node, func(n ast.Node) bool {
-		switch v:= n.(type) {
+		switch v := n.(type) {
 		case *ast.FuncDecl:
 			if v.Doc.Text() == "" {
 				var b []byte
@@ -48,4 +51,3 @@ func ReadDecl(file string) ([]Decl, error) {
 	})
 	return d, nil
 }
-

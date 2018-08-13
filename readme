@@ -6,4 +6,6 @@ The default behaviour is to prompt to add comments to any package or function de
 
 By default package comments are added to each file of that package. This is useful for preamble style comments such as copyrights.
 
+Multi-line comments are allowed and slashes will automatically be added to each line of text. Use q on a line alone to quit entering a comment. 
+
 More features to be added.

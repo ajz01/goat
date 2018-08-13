@@ -1,3 +1,5 @@
+// Package to walk directories concurrently. Inspired heavily by "The Go Programming Language" book by Donovan and Kerninghan. Great book for learning
+// Go programming.
 package walk
 
 import (
@@ -9,7 +11,7 @@ import (
 	"github.com/ajz01/goat/read"
 )
 
-
+// Helper function to get directory entries
 func dirents(dir string) []os.FileInfo {
 	entries, err := ioutil.ReadDir(dir)
 	if err != nil {
@@ -19,6 +21,7 @@ func dirents(dir string) []os.FileInfo {
 	return entries
 }
 
+// Walk directories concurrently
 func WalkDir(dir string, n *sync.WaitGroup, dch chan<- read.Decl) {
 	defer n.Done()
 	for _, entry := range dirents(dir) {
@@ -33,7 +36,7 @@ func WalkDir(dir string, n *sync.WaitGroup, dch chan<- read.Decl) {
 					fmt.Fprintf(os.Stderr, "goat ReadDecl: %v\n", err)
 				}
 				for _, d := range fileDecl {
-					dch<- d
+					dch <- d
 				}
 			}
 		}
