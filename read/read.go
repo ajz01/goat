@@ -1,5 +1,5 @@
-// A package for reading go files and finding declarations
-// that do not have comments.
+// Package to read go files and find declarations with
+// no comments
 package read
 
 import (
@@ -12,7 +12,7 @@ import (
 	"go/printer"
 )
 
-// package declaration info
+// declaration info
 type Decl struct {
 	Dtype		string
 	Pos		int
@@ -24,8 +24,9 @@ type Decl struct {
 	Comment		[]string
 }
 
-// Read existing go files and extract declarations that are missing comments
-// pass declaration info back through channel
+// Read go file and find declarations with no comments
+// and
+// return through channel
 func ReadDecl(file string) ([]Decl, error) {
 	fset := token.NewFileSet()
 	node, err := parser.ParseFile(fset, file, nil, parser.ParseComments)
@@ -53,11 +54,13 @@ func ReadDecl(file string) ([]Decl, error) {
 			if v.Tok == token.TYPE {
 				name := ""
 				for _, t := range v.Specs {
-					if n, ok := t.(*ast.TypeSpec); ok {
-						name = n.Name.Name
+					if a, ok := t.(*ast.TypeSpec); ok {
+						if v.Doc.Text() == "" {
+							name = a.Name.Name
+							d = append(d, Decl{"type", int(n.Pos()), file, node.Name.Name, name, int(a.Pos()), "", []string{}})
+						}
 					}
 				}
-				d = append(d, Decl{"type", int(n.Pos()), file, node.Name.Name, name, int(v.Pos()), "", []string{}})
 			}
 		}
 		return true

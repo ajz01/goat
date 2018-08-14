@@ -1,8 +1,4 @@
-// The main package for goat. Goat (Go Add Text) is a
-// command line tool for adding comments to existing code.
-// By default goat will search the working directory for
-// declarations that are missing comments and prompt for
-// text.
+// The main goat package
 package main
 
 import (
@@ -20,7 +16,7 @@ import (
 	"unicode"
 )
 
-// Split lines that are greater than 50 characters
+// split lines greater than 50 characters
 func splitLine(line string) []string {
 	lines := []string{}
 	a := []rune(line)
@@ -36,7 +32,7 @@ func splitLine(line string) []string {
 	return lines
 }
 
-// Entry point for goat tool
+// goat cmd main entry point
 func main() {
 	flag.Parse()
 	roots := flag.Args()
@@ -60,6 +56,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 DeclLoop:
 	for d := range dch {
+
 		if d.Dtype == "package" {
 			for _, decl := range ld {
 				if decl.PackageName == d.PackageName {
@@ -125,21 +122,14 @@ DeclLoop:
 			}
 		}
 		ast.Inspect(f.file, func(n ast.Node) bool {
-			c, ok := n.(*ast.CommentGroup)
-			if ok {
+			if c, ok := n.(*ast.CommentGroup); ok {
 				comments = append(comments, c)
-				for _, comment := range c.List {
-					fmt.Printf("existing comment: %d %s\n", comment.Slash, comment.Text)
-				}
 			}
 			switch v := n.(type) {
 			case *ast.FuncDecl:
 			case *ast.GenDecl:
 				for _, d := range f.decls {
 					if int(v.Pos()) == d.Pos {
-						if v.Doc != nil {
-							fmt.Println("comments not empty")
-						}
 						cg := ast.CommentGroup{}
 						for _, c := range d.Comment {
 							cg.List = append(cg.List, &ast.Comment{token.Pos(d.Pos - 1), `// ` + c})
@@ -147,6 +137,7 @@ DeclLoop:
 						v.Doc = &cg
 					}
 				}
+
 			}
 			return true
 		})
