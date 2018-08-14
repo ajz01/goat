@@ -88,6 +88,7 @@ DeclLoop:
 		ld = append(ld, d)
 	}
 
+	// file ast info
 	type fileAst struct {
 		file		*ast.File
 		fileSet		*token.FileSet
@@ -133,6 +134,7 @@ DeclLoop:
 			}
 			switch v := n.(type) {
 			case *ast.FuncDecl:
+			case *ast.GenDecl:
 				for _, d := range f.decls {
 					if int(v.Pos()) == d.Pos {
 						if v.Doc != nil {

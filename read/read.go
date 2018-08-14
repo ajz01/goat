@@ -12,6 +12,7 @@ import (
 	"go/printer"
 )
 
+// package declaration info
 type Decl struct {
 	Dtype		string
 	Pos		int
@@ -47,6 +48,16 @@ func ReadDecl(file string) ([]Decl, error) {
 					return false
 				}
 				d = append(d, Decl{"function", int(n.Pos()), file, node.Name.Name, v.Name.Name, int(v.Pos()), body.String(), []string{}})
+			}
+		case *ast.GenDecl:
+			if v.Tok == token.TYPE {
+				name := ""
+				for _, t := range v.Specs {
+					if n, ok := t.(*ast.TypeSpec); ok {
+						name = n.Name.Name
+					}
+				}
+				d = append(d, Decl{"type", int(n.Pos()), file, node.Name.Name, name, int(v.Pos()), "", []string{}})
 			}
 		}
 		return true
