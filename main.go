@@ -54,6 +54,9 @@ func main() {
 
 	ld := []read.Decl{}
 	scanner := bufio.NewScanner(os.Stdin)
+
+	fmt.Println("WARNING: This command will re-write all files in the working directory and all sub-directories to add the new comments. Since this is an experimental project there is a chance something could go wrong and you could loose files or work. Exit this process unless you have a back-up.")
+
 DeclLoop:
 	for d := range dch {
 
